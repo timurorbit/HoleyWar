@@ -1,8 +1,10 @@
 package com.timplant.controller;
 
 import com.timplant.model.Message;
+import com.timplant.model.User;
 import com.timplant.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,19 +30,23 @@ public class MainController {
     public String main(Map<String, Object> model) {
         Iterable<Message> messages = messageRepository.findAll();
 
-        model.put("messages" , messages);
+        model.put("messages", messages);
         return "main";
     }
 
     @PostMapping("/main")
-    public String add(@RequestParam String text, @RequestParam String tag, Map<String, Object> model) {
-        Message message = new Message(text, tag);
+    public String add(
+            @AuthenticationPrincipal User user,
+            @RequestParam String text,
+            @RequestParam String tag, Map<String, Object> model
+    ) {
+        Message message = new Message(text, tag, user);
 
         messageRepository.save(message);
 
         Iterable<Message> messages = messageRepository.findAll();
 
-        model.put("messages" , messages);
+        model.put("messages", messages);
         return "main";
     }
 
@@ -50,7 +56,7 @@ public class MainController {
         if (filter != null && !filter.isEmpty()) {
             messages = messageRepository.findByTag(filter);
         } else {
-           messages = messageRepository.findAll();
+            messages = messageRepository.findAll();
         }
         model.put("messages", messages);
 
