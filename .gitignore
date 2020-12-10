@@ -6,5 +6,7 @@
 *.iml
 out
 gen
-target
+.target
 src/main/resources/application.properties
+.idea/workspace.xml
+src/test/
