@@ -1,25 +1,24 @@
 package com.timplant.controller;
 
-import com.timplant.model.Role;
 import com.timplant.model.User;
-import com.timplant.repository.UserRepository;
+import com.timplant.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 
 @Controller
 public class RegistrationController {
 
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
-    public RegistrationController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public RegistrationController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/registration")
@@ -29,16 +28,25 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String adduser(User user, Map<String, Object> model) {
-        User userFromDB = userRepository.findByUsername(user.getUsername());
+        if (!userService.addUser(user)) {
+            model.put("message", "User exists!");
+            return "registration";
+        } else {
+            model.put("message", "mail for activation was sent/ user was created");
+            return "redirect:/login";
+        }
+    }
 
-        if (userFromDB != null) {
-          model.put("message", "User exists!");
-          return "registration";
+    @GetMapping("activate/{code}")
+    public String activate(Model model, @PathVariable String code) {
+        boolean isActivated = userService.activateUser(code);
+
+        if (isActivated) {
+            model.addAttribute("message", "User successfully activated");
+        } else {
+            model.addAttribute("message", "Activation code is not found");
         }
 
-        user.setActive(true);
-        user.setRoles(Collections.singleton(Role.USER));
-        userRepository.save(user);
-        return "redirect:/login";
+        return "login";
     }
 }
