@@ -9,16 +9,5 @@ gen
 .target
 src/main/resources/application.properties
 src/main/resources/application-dev.properties
+src/test/resources/application-test.properties
 .idea/workspace.xml
-src/test/
-target/classes/application-dev.properties
-target/classes/com/timplant/config/
-target/classes/com/timplant/controller/
-target/classes/com/timplant/model/
-target/classes/com/timplant/repository/
-target/classes/com/timplant/service/
-target/classes/db/
-target/classes/static/
-target/classes/templates/
-target/generated-sources/
-target/maven-status/
