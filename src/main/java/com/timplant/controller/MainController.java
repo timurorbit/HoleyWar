@@ -5,6 +5,10 @@ import com.timplant.model.User;
 import com.timplant.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,16 +46,22 @@ public class MainController {
     }
 
     @GetMapping("/main")
-    public String main(@RequestParam(required = false, defaultValue = "") String filter, Model model) {
-        Iterable<Message> messages = messageRepository.findAll();
+    public String main(
+            @RequestParam(required = false, defaultValue = "") String filter,
+            Model model,
+            @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC, value = 3) Pageable pageable
+
+    ) {
+        Page<Message> page;
 
         if (filter != null && !filter.isEmpty()) {
-            messages = messageRepository.findByTag(filter);
+            page = messageRepository.findByTag(filter, pageable);
         } else {
-            messages = messageRepository.findAll();
+            page = messageRepository.findAll(pageable);
         }
 
-        model.addAttribute("messages", messages);
+        model.addAttribute("page", page);
+        model.addAttribute("url", "/main");
         model.addAttribute("filter", filter);
 
         return "main";
