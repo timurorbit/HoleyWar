@@ -15,6 +15,7 @@
 - As frontend implementation im using apache freemaker with Bootstrap  
 
 # if you want to use this app, you need to set up your application.properties file
+# forExample
 
 server.port = 8081  
 spring.datasource.url=jdbc:postgresql://localhost/holeyWar  
