@@ -7,7 +7,7 @@
 4. ManyToMany, OneToMany, ManyToOne realizations
 - Spring Security
 1. password encoding
-2. Users and Admins
+2. Users and Admins (Login/Register and verification)
 - Spring Boot Mail (email verification)
 - Integration tests (with DB scripts)
 - Unit tests (With JUnit and Mockito)
