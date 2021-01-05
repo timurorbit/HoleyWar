@@ -39,5 +39,12 @@ public class Message {
     public String getAuthorName() {
         return author != null ? author.getUsername() : "<none>";
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "Message[text = %s, tag = %s, author = %s]"
+        );
+    }
 }
             
